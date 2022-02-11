@@ -35,8 +35,9 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.9.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.InteractiveHost" Version="3.9.0-3.21056.4" />
     <PackageReference Include="Microsoft.CodeAnalysis.Scripting.Common" Version="3.9.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Framework" Version="16.9.31425.357" />
-    <PackageReference Include="Microsoft.VisualStudio.Text.Data" Version="16.9.244" />
+    <PackageReference Include="Microsoft.Diagnostics.Tracing.EventSource" Version="1.1.28" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.Framework" Version="17.0.32112.339" />
+    <PackageReference Include="Microsoft.VisualStudio.Text.Data" Version="17.0.491" />
         <PackageReference Include="RapidXaml.CustomAnalysis" Version="0.13.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
