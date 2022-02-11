@@ -54,21 +54,22 @@
     <file src=".\bin\release\net472\Microsoft.CodeAnalysis.Workspaces.dll" target="tools/net472/" />
     <file src=".\bin\release\net472\Microsoft.Diagnostics.Tracing.EventSource.dll" target="tools/net472/" />
     <file src=".\bin\release\net472\Microsoft.DiaSymReader.dll" target="tools/net472/" />
+    <file src=".\bin\release\net472\Microsoft.VisualStudio.Interop.dll" target="tools/net472/" />
     <file src=".\bin\release\net472\Microsoft.Language.Xml.dll" target="tools/net472/" />
     <file src=".\bin\release\net472\Microsoft.VisualStudio.Composition.dll" target="tools/net472/" />
     <file src=".\bin\release\net472\Microsoft.VisualStudio.CoreUtility.dll" target="tools/net472/" />
     <file src=".\bin\release\net472\Microsoft.VisualStudio.LanguageServices.dll" target="tools/net472/" />
-    <file src=".\bin\release\net472\Microsoft.VisualStudio.OLE.Interop.dll" target="tools/net472/" />
+    <!--<file src=".\bin\release\net472\Microsoft.VisualStudio.OLE.Interop.dll" target="tools/net472/" />-->
     <file src=".\bin\release\net472\Microsoft.VisualStudio.RemoteControl.dll" target="tools/net472/" />
-    <file src=".\bin\release\net472\Microsoft.VisualStudio.Shell.Interop.dll" target="tools/net472/" />
+    <!--<file src=".\bin\release\net472\Microsoft.VisualStudio.Shell.Interop.dll" target="tools/net472/" />-->
     <file src=".\bin\release\net472\Microsoft.VisualStudio.Shell.Framework.dll" target="tools/net472/" />
     <file src=".\bin\release\net472\Microsoft.VisualStudio.Telemetry.dll" target="tools/net472/" />
     <file src=".\bin\release\net472\Microsoft.VisualStudio.Text.Data.dll" target="tools/net472/" />
     <file src=".\bin\release\net472\Microsoft.VisualStudio.Text.Logic.dll" target="tools/net472/" />
-    <file src=".\bin\release\net472\Microsoft.VisualStudio.TextManager.Interop.11.0.dll" target="tools/net472/" />
+    <!--<file src=".\bin\release\net472\Microsoft.VisualStudio.TextManager.Interop.11.0.dll" target="tools/net472/" />
     <file src=".\bin\release\net472\Microsoft.VisualStudio.TextManager.Interop.12.0.dll" target="tools/net472/" />
     <file src=".\bin\release\net472\Microsoft.VisualStudio.TextManager.Interop.8.0.dll" target="tools/net472/" />
-    <file src=".\bin\release\net472\Microsoft.VisualStudio.TextManager.Interop.dll" target="tools/net472/" />
+    <file src=".\bin\release\net472\Microsoft.VisualStudio.TextManager.Interop.dll" target="tools/net472/" />-->
     <file src=".\bin\release\net472\Microsoft.VisualStudio.Threading.dll" target="tools/net472/" />
     <file src=".\bin\release\net472\Microsoft.VisualStudio.Utilities.Internal.dll" target="tools/net472/" />
     <file src=".\bin\release\net472\Microsoft.VisualStudio.Validation.dll" target="tools/net472/" />
