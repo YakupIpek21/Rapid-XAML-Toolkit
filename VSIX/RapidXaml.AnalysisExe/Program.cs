@@ -148,15 +148,24 @@ namespace RapidXaml.AnalysisExe
                 yield break;
             }
 
-            var directories = Directory.GetDirectories(directory).ToList();
-            directories.Add(directory);
-
-            foreach (var dir in directories)
+            if (directory.Contains("\\obj\\") || directory.Contains("\\bin\\"))
             {
-                foreach (var xamlFiles in GetXamlFiles(dir))
+                yield break;
+            }
+
+            var directories = Directory.GetDirectories(directory).ToList();
+
+            foreach (var d in directories)
+            {
+                foreach (var xamlfiles in GetAllXamlFilesInCurrentDir(d))
                 {
-                    yield return xamlFiles;
+                    yield return xamlfiles;
                 }
+            }
+
+            foreach (var xamlFiles in GetXamlFiles(directory))
+            {
+                yield return xamlFiles;
             }
         }
     }
