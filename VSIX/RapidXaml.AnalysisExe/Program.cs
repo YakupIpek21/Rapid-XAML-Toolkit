@@ -67,65 +67,55 @@ namespace RapidXaml.AnalysisExe
 
                 var linesOutputted = new List<string>();
 
-                foreach (var line in projFileLines)
+                var files = GetAllXamlFilesInCurrentDir(projDir);
+
+                foreach (var xamlFilePath in files)
                 {
-                    var endPos = line.IndexOf(".xaml\"");
-                    if (endPos > 1)
+                    Console.WriteLine($"- Analyzing: '{xamlFilePath}'");
+
+                    var snapshot = new BuildAnalysisTextSnapshot(xamlFilePath);
+                    var rxdoc = RapidXamlDocument.Create(snapshot, xamlFilePath, bavsa, projectPath);
+
+                    Debug.WriteLine($"Found {rxdoc.Tags.Count} taggable issues in '{xamlFilePath}'.");
+
+                    if (rxdoc.Tags.Count > 0)
                     {
-                        var startPos = line.IndexOf("Include");
+                        var tagsOfInterest = rxdoc.Tags
+                                                  .Where(t => t is RapidXamlDisplayedTag)
+                                                  .Select(t => t as RapidXamlDisplayedTag)
+                                                  .ToList();
 
-                        if (startPos > 1)
+                        Debug.WriteLine($"Found {tagsOfInterest.Count} issues to report in '{xamlFilePath}'.");
+
+                        foreach (var issue in tagsOfInterest)
                         {
-                            var relativeFilePath = line.Substring(startPos + 9, endPos + 5 - startPos - 9);
-                            var xamlFilePath = Path.Combine(projDir, relativeFilePath);
-
-                            Console.WriteLine($"- Analyzing: '{xamlFilePath}'");
-
-                            var snapshot = new BuildAnalysisTextSnapshot(xamlFilePath);
-                            var rxdoc = RapidXamlDocument.Create(snapshot, xamlFilePath, bavsa, projectPath);
-
-                            Debug.WriteLine($"Found {rxdoc.Tags.Count} taggable issues in '{xamlFilePath}'.");
-
-                            if (rxdoc.Tags.Count > 0)
+                            string messageType = string.Empty;
+                            switch (issue.ConfiguredErrorType)
                             {
-                                var tagsOfInterest = rxdoc.Tags
-                                                          .Where(t => t is RapidXamlDisplayedTag)
-                                                          .Select(t => t as RapidXamlDisplayedTag)
-                                                          .ToList();
+                                case TagErrorType.Error:
+                                    messageType = "error";
+                                    break;
+                                case TagErrorType.Warning:
+                                    messageType = "warning";
+                                    break;
+                                case TagErrorType.Suggestion:
+                                    // Not supported in the build process
+                                    break;
+                                case TagErrorType.Hidden:
+                                    break;
+                            }
 
-                                Debug.WriteLine($"Found {tagsOfInterest.Count} issues to report in '{xamlFilePath}'.");
+                            if (!string.IsNullOrEmpty(messageType))
+                            {
+                                // Add 1 to line number to allow for VS counting without zero index
+                                // Error code is repeated with the description because it doesn't show in the Visual Studio Error List
+                                // For format see https://github.com/Microsoft/msbuild/blob/master/src/Shared/CanonicalError.cs
+                                var outputText = $"{xamlFilePath}({issue.Line + 1},{issue.Column}): {messageType} {issue.ErrorCode}: {issue.Description} ({issue.ErrorCode})";
 
-                                foreach (var issue in tagsOfInterest)
+                                if (!linesOutputted.Contains(outputText))
                                 {
-                                    string messageType = string.Empty;
-                                    switch (issue.ConfiguredErrorType)
-                                    {
-                                        case TagErrorType.Error:
-                                            messageType = "error";
-                                            break;
-                                        case TagErrorType.Warning:
-                                            messageType = "warning";
-                                            break;
-                                        case TagErrorType.Suggestion:
-                                            // Not supported in the build process
-                                            break;
-                                        case TagErrorType.Hidden:
-                                            break;
-                                    }
-
-                                    if (!string.IsNullOrEmpty(messageType))
-                                    {
-                                        // Add 1 to line number to allow for VS counting without zero index
-                                        // Error code is repeated with the description because it doesn't show in the Visual Studio Error List
-                                        // For format see https://github.com/Microsoft/msbuild/blob/master/src/Shared/CanonicalError.cs
-                                        var outputText = $"{xamlFilePath}({issue.Line + 1},{issue.Column}): {messageType} {issue.ErrorCode}: {issue.Description} ({issue.ErrorCode})";
-
-                                        if (!linesOutputted.Contains(outputText))
-                                        {
-                                            linesOutputted.Add(outputText);
-                                            Console.WriteLine(outputText);
-                                        }
-                                    }
+                                    linesOutputted.Add(outputText);
+                                    Console.WriteLine(outputText);
                                 }
                             }
                         }
@@ -135,6 +125,38 @@ namespace RapidXaml.AnalysisExe
             catch (Exception exc)
             {
                 Console.WriteLine($"ERROR. {exc}");
+            }
+        }
+
+        private static IEnumerable<string> GetXamlFiles(string directory)
+        {
+            var files = Directory.GetFiles(directory);
+
+            foreach (var file in files)
+            {
+                if (file.EndsWith(".xaml"))
+                {
+                    yield return file;
+                }
+            }
+        }
+
+        private static IEnumerable<string> GetAllXamlFilesInCurrentDir(string directory)
+        {
+            if (!Directory.Exists(directory))
+            {
+                yield break;
+            }
+
+            var directories = Directory.GetDirectories(directory).ToList();
+            directories.Add(directory);
+
+            foreach (var dir in directories)
+            {
+                foreach (var xamlFiles in GetXamlFiles(dir))
+                {
+                    yield return xamlFiles;
+                }
             }
         }
     }
