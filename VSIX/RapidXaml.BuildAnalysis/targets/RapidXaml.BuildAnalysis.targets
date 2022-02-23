@@ -6,8 +6,10 @@
       RapidXamlBuildAnalysis
     </BuildDependsOn>
   </PropertyGroup>
-
+  
   <Target Name="RapidXamlBuildAnalysis">
+    <Message Text="----------------------------" Importance="high"/>
     <Program Command="$(ProjectPath)" NuGetPath="$(NuGetPackageRoot)" />
+    <Message Text="----------------------------" Importance="high"/>
   </Target>
 </Project>
