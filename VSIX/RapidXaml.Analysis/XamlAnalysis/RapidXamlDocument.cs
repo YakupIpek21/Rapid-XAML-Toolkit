@@ -189,13 +189,16 @@ namespace RapidXamlToolkit.XamlAnalysis
                 customProcessors.Add(new CustomAnalysis.SliderAnalyzer(vsAbstraction, logger));
                 customProcessors.Add(new CustomAnalysis.StepperAnalyzer(vsAbstraction, logger));
 
-                for (int i = 0; i < customProcessors.Count; i++)
-                {
-                    ICustomAnalyzer customProcessor = customProcessors[i];
-                    processors.Add(
-                        (customProcessor.TargetType(),
-                         new CustomProcessorWrapper(customProcessor, projType, projectFilePath, logger, vsAbstraction)));
-                }
+                //for (int i = 0; i < customProcessors.Count; i++)
+                //{
+                //    ICustomAnalyzer customProcessor = customProcessors[i];
+                //    processors.Add(
+                //        (customProcessor.TargetType(),
+                //         new CustomProcessorWrapper(customProcessor, projType, projectFilePath, logger, vsAbstraction)));
+                //}
+
+                // Make sure that all custom analyzers are correctly used as processors
+                processors.AddRange(WrapCustomProcessors(customProcessors, projType, projectFilePath, logger, vsAbstraction));
             }
 
             return processors;
@@ -287,7 +290,8 @@ namespace RapidXamlToolkit.XamlAnalysis
                                 && !Path.GetFileName(fileName).Equals("ucrtbased.dll")
                                 && !Path.GetFileName(fileName).Equals("netstandard.dll")
                                 && !Path.GetFileName(fileName).Equals("WindowsBase.dll")
-                                && !Path.GetFileName(fileName).Equals("RapidXaml.CustomAnalysis.dll");
+                                && !Path.GetFileName(fileName).Equals("RapidXaml.CustomAnalysis.dll")
+                                && Path.GetFileName(fileName).IndexOf("Localization", StringComparison.OrdinalIgnoreCase) != -1;
 
 #if DEBUG
                 // Avoid trying to load self while debugging
@@ -301,6 +305,8 @@ namespace RapidXamlToolkit.XamlAnalysis
             // Keep track of what's been loaded so don't load duplicates.
             // Duplicates are likely if the custom analyzer project is in a parallel project in the same solution.
             var loadedAssemblies = new List<string>();
+
+            folderToSearch = Path.GetDirectoryName(folderToSearch);
 
             // Skip anything (esp. common files) that definitely won't contain custom analyzers
             foreach (var file in Directory.GetFiles(folderToSearch, "*.dll", SearchOption.AllDirectories)
