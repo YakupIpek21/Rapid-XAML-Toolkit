@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>RapidXaml.BuildAnalysis</id>
-    <version>0.13.8</version>
+    <version>0.13.9</version>
     <authors>Matt Lacey</authors>
     <owners>MRLacey</owners>
     <copyright>Copyright © 2021 Matt Lacey Ltd.</copyright>
@@ -41,7 +41,7 @@
     <file src=".\bin\debug\net472\RapidXaml.Utils.pdb" target="tools/net472/" />
     <!-- Would love to do this with wildcards but for some reason it's not working -->
     <file src=".\bin\debug\net472\ApiAnalysis.SimpleJsonAnalyzer.vsixuse.dll" target="tools/net472/" />
-    <!--<file src=".\bin\debug\net472\EnvDTE.dll" target="tools/net472/" />-->
+    <file src=".\bin\debug\net472\EnvDTE.dll" target="tools/net472/" />
     <file src=".\bin\debug\net472\Humanizer.dll" target="tools/net472/" />
     <file src=".\bin\debug\net472\MessagePack.Annotations.dll" target="tools/net472/" />
     <file src=".\bin\debug\net472\MessagePack.dll" target="tools/net472/" />
@@ -98,6 +98,7 @@
     <!--<file src=".\bin\debug\net472\RapidXaml.InternalAnalyzers.dll" target="tools/net472/" />-->
     <!--<file src=".\bin\debug\net472\RapidXaml.Shared.dll" target="tools/net472/" />-->
     <!--<file src=".\bin\debug\net472\stdole.dll" target="tools/net472/" />-->
+    <file src=".\bin\debug\net472\stdole.dll" target="tools/net472/" />
     <file src=".\bin\debug\net472\StreamJsonRpc.dll" target="tools/net472/" />
     <file src=".\bin\debug\net472\System.Buffers.dll" target="tools/net472/" />
     <file src=".\bin\debug\net472\System.Collections.Immutable.dll" target="tools/net472/" />
