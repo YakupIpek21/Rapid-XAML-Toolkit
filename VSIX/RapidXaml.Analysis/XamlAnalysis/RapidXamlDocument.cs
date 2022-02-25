@@ -291,7 +291,9 @@ namespace RapidXamlToolkit.XamlAnalysis
                                 && !Path.GetFileName(fileName).Equals("netstandard.dll")
                                 && !Path.GetFileName(fileName).Equals("WindowsBase.dll")
                                 && !Path.GetFileName(fileName).Equals("RapidXaml.CustomAnalysis.dll")
-                                && Path.GetFileName(fileName).IndexOf("Localization", StringComparison.OrdinalIgnoreCase) != -1;
+                                && (Path.GetFileName(fileName).IndexOf("Localization", StringComparison.OrdinalIgnoreCase) != -1
+                                    || Path.GetFileName(fileName).IndexOf("XamlAnalyzer", StringComparison.OrdinalIgnoreCase) != -1
+                                    || Path.GetFileName(fileName).IndexOf("CodeAnalyzer", StringComparison.OrdinalIgnoreCase) != -1);
 
 #if DEBUG
                 // Avoid trying to load self while debugging
@@ -306,6 +308,7 @@ namespace RapidXamlToolkit.XamlAnalysis
             // Duplicates are likely if the custom analyzer project is in a parallel project in the same solution.
             var loadedAssemblies = new List<string>();
 
+            // in AdvokatX search starting from grandparent directory
             folderToSearch = Path.GetDirectoryName(folderToSearch);
 
             // Skip anything (esp. common files) that definitely won't contain custom analyzers
@@ -343,6 +346,7 @@ namespace RapidXamlToolkit.XamlAnalysis
                                 result.AddRange(cachedAnalyzers);
                             }
 
+                            loadedAssemblies.Add(fileName);
                             continue;
                         }
                         else
