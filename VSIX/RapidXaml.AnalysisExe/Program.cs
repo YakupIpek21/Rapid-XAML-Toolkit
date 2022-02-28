@@ -110,7 +110,9 @@ namespace RapidXaml.AnalysisExe
                                 // Add 1 to line number to allow for VS counting without zero index
                                 // Error code is repeated with the description because it doesn't show in the Visual Studio Error List
                                 // For format see https://github.com/Microsoft/msbuild/blob/master/src/Shared/CanonicalError.cs
-                                var outputText = $"{xamlFilePath}({issue.Line + 1},{issue.Column}): {messageType} {issue.ErrorCode}: {issue.Description} ({issue.ErrorCode})";
+
+                                //var outputText = $"{xamlFilePath}({issue.Line + 1},{issue.Column}): {messageType} {issue.ErrorCode}: {issue.Description} ({issue.ErrorCode})";
+                                var outputText = $"(BuildAnaylsis Output){xamlFilePath}({issue.Line + 1},{issue.Column}): {messageType} {issue.ErrorCode}: {issue.Description}";
 
                                 if (!linesOutputted.Contains(outputText))
                                 {
