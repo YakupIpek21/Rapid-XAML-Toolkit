@@ -21,5 +21,9 @@ namespace RapidXamlToolkit.ErrorList
         public TagErrorType ErrorType { get; set; }
 
         public string MoreInfoUrl { get; set; }
+
+        public int Line { get; set; }
+
+        public int Column { get; set; }
     }
 }

@@ -22,6 +22,8 @@ namespace RapidXamlToolkit.ErrorList
 
         private TableDataSource()
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             var compositionService = ServiceProvider.GlobalProvider.GetService(typeof(SComponentModel)) as IComponentModel;
             compositionService?.DefaultCompositionService.SatisfyImportsOnce(this);
 
@@ -108,6 +110,29 @@ namespace RapidXamlToolkit.ErrorList
             }
 
             result.Errors = result.Errors.Where(v => !Snapshots.Any(s => s.Value.Errors.Contains(v)) && v.ErrorType != TagErrorType.Hidden).ToList();
+
+            // get the entries of the error list window
+            var errorWindow = ProjectHelpers.Dte.Windows.Item(EnvDTE80.WindowKinds.vsWindowKindErrorList);
+            var items = (EnvDTE80.ErrorList)errorWindow.Selection;
+
+            var errorListProvider = ProjectHelpers.ErrorListProvider;
+
+            for (int i = 1; i <= items.ErrorItems.Count; i++)
+            {
+                var errorItem = items.ErrorItems.Item(i);
+
+                result.Errors = result.Errors.Where(e => !(e.Message.Equals(errorItem.Description) && e.Column == errorItem.Column && e.Line == errorItem.Line)).ToList();
+
+                //if (result.Errors.Any(e => e.Message.Equals(errorItem.Description) && e.Column == errorItem.Column && e.Line == errorItem.Line))
+                //{
+                //    return;
+                //}
+            }
+
+            if (!result.Errors.Any())
+            {
+                return;
+            }
 
             var snapshot = new TableEntriesSnapshot(result);
             Snapshots[result.FilePath] = snapshot;

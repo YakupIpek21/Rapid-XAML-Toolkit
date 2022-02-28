@@ -20,6 +20,8 @@ namespace RapidXamlToolkit.XamlAnalysis
                 IsInternalError = source.IsInternalError,
                 ErrorType = source.ConfiguredErrorType,
                 MoreInfoUrl = source.MoreInfoUrl,
+                Line = source.Line + 1,
+                Column = source.Column + 1,
             };
         }
     }
