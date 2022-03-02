@@ -234,11 +234,10 @@ namespace RapidXamlToolkit.XamlAnalysis
         {
             try
             {
-                // Start searching one directory higher to allow for multi-project solutions.
-                var dirToSearch = Path.GetDirectoryName(projectFileDirectory);
+                // Start searching two directories higher to allow for multi-project solutions.
+                var dirToSearch = Path.GetDirectoryName(Path.GetDirectoryName(projectFileDirectory));
 
                 var loadCustomAnalyzers = false;
-                var pathProvided = false;
 
 #if VSIXNOTEXE
                 // Only load custom analyzers when VS has finished starting up.
@@ -254,7 +253,6 @@ namespace RapidXamlToolkit.XamlAnalysis
                     if (!string.IsNullOrEmpty(customProcessorsPath) && Directory.Exists(customProcessorsPath))
                     {
                         dirToSearch = customProcessorsPath;
-                        pathProvided = true;
                     }
                 }
 #endif
@@ -265,7 +263,7 @@ namespace RapidXamlToolkit.XamlAnalysis
 
                 if (loadCustomAnalyzers)
                 {
-                    return GetCustomAnalyzers(dirToSearch, pathProvided);
+                    return GetCustomAnalyzers(dirToSearch);
                 }
             }
             catch (Exception exc)
@@ -278,7 +276,7 @@ namespace RapidXamlToolkit.XamlAnalysis
             return new List<ICustomAnalyzer>();
         }
 
-        public static List<ICustomAnalyzer> GetCustomAnalyzers(string folderToSearch, bool pathProvided)
+        public static List<ICustomAnalyzer> GetCustomAnalyzers(string folderToSearch)
         {
             var result = new List<ICustomAnalyzer>();
 
@@ -316,12 +314,6 @@ namespace RapidXamlToolkit.XamlAnalysis
             // Keep track of what's been loaded so don't load duplicates.
             // Duplicates are likely if the custom analyzer project is in a parallel project in the same solution.
             var loadedAssemblies = new List<string>();
-
-            if (!pathProvided)
-            {
-                // in AdvokatX search starting from grandparent directory
-                folderToSearch = Path.GetDirectoryName(folderToSearch);
-            }
 
             // Skip anything (esp. common files) that definitely won't contain custom analyzers
             foreach (var file in Directory.GetFiles(folderToSearch, "*.dll", SearchOption.AllDirectories)
