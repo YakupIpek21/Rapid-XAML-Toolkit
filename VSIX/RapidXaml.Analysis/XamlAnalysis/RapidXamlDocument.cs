@@ -238,6 +238,7 @@ namespace RapidXamlToolkit.XamlAnalysis
                 var dirToSearch = Path.GetDirectoryName(projectFileDirectory);
 
                 var loadCustomAnalyzers = false;
+                var pathProvided = false;
 
 #if VSIXNOTEXE
                 // Only load custom analyzers when VS has finished starting up.
@@ -248,6 +249,13 @@ namespace RapidXamlToolkit.XamlAnalysis
                     {
                         loadCustomAnalyzers = true;
                     }
+
+                    var customProcessorsPath = RapidXamlAnalysisPackage.Options.Path;
+                    if (!string.IsNullOrEmpty(customProcessorsPath) && Directory.Exists(customProcessorsPath))
+                    {
+                        dirToSearch = customProcessorsPath;
+                        pathProvided = true;
+                    }
                 }
 #endif
 
@@ -257,7 +265,7 @@ namespace RapidXamlToolkit.XamlAnalysis
 
                 if (loadCustomAnalyzers)
                 {
-                    return GetCustomAnalyzers(dirToSearch);
+                    return GetCustomAnalyzers(dirToSearch, pathProvided);
                 }
             }
             catch (Exception exc)
@@ -270,12 +278,13 @@ namespace RapidXamlToolkit.XamlAnalysis
             return new List<ICustomAnalyzer>();
         }
 
-        public static List<ICustomAnalyzer> GetCustomAnalyzers(string folderToSearch)
+        public static List<ICustomAnalyzer> GetCustomAnalyzers(string folderToSearch, bool pathProvided)
         {
             var result = new List<ICustomAnalyzer>();
 
             bool FileFilter(string fileName)
             {
+                // my changes: CustomAnalyzers must adhere to certain namings, the naming must contain one of the following words: Localization, XamlAnalyzer, CodeAnalyzer
                 var filterResult = !fileName.Contains("/obj/")
                                 && !fileName.Contains("\\obj\\")
                                 && !fileName.Contains(".resources")
@@ -308,8 +317,11 @@ namespace RapidXamlToolkit.XamlAnalysis
             // Duplicates are likely if the custom analyzer project is in a parallel project in the same solution.
             var loadedAssemblies = new List<string>();
 
-            // in AdvokatX search starting from grandparent directory
-            folderToSearch = Path.GetDirectoryName(folderToSearch);
+            if (!pathProvided)
+            {
+                // in AdvokatX search starting from grandparent directory
+                folderToSearch = Path.GetDirectoryName(folderToSearch);
+            }
 
             // Skip anything (esp. common files) that definitely won't contain custom analyzers
             foreach (var file in Directory.GetFiles(folderToSearch, "*.dll", SearchOption.AllDirectories)

@@ -10,7 +10,7 @@ namespace RapidXamlToolkit
     public class AnalysisOptionsGrid : DialogPage
     {
         [DisplayName("Analyze On Save")]
-        [Description("(Re)Ananlyze the XAML document every time it is saved.")]
+        [Description("(Re)Analyze the XAML document every time it is saved.")]
         [DefaultValue(true)]
         public bool AnalyzeWhenDocumentSaved { get; set; } = true;
 
@@ -18,7 +18,13 @@ namespace RapidXamlToolkit
         [DisplayName("Enable Custom Analysis")]
         [Description("Attempt to load additional analyzers from referenced libraries.")]
         [DefaultValue(false)]
-        public bool EnableCustomAnalysis { get; set; } = false;
+        public bool EnableCustomAnalysis { get; set; } = true;
+
+        [Category("Experimental")]
+        [DisplayName("Path To Custom Analyzers")]
+        [Description("Attempt to load additional analyzers from referenced libraries.")]
+        [DefaultValue("")]
+        public string Path { get; set; } = string.Empty;
 
         protected override void OnClosed(EventArgs e)
         {
