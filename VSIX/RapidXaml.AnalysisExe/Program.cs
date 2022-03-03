@@ -112,7 +112,7 @@ namespace RapidXaml.AnalysisExe
                                 // For format see https://github.com/Microsoft/msbuild/blob/master/src/Shared/CanonicalError.cs
 
                                 //var outputText = $"{xamlFilePath}({issue.Line + 1},{issue.Column}): {messageType} {issue.ErrorCode}: {issue.Description} ({issue.ErrorCode})";
-                                var outputText = $"(BuildAnaylsis Output){xamlFilePath}({issue.Line + 1},{issue.Column}): {messageType} {issue.ErrorCode}: {issue.Description}";
+                                var outputText = $"{xamlFilePath}({issue.Line + 1},{issue.Column}): {messageType} {issue.ErrorCode}: {issue.Description} (BuildAnaylsis Output)";
 
                                 if (!linesOutputted.Contains(outputText))
                                 {
