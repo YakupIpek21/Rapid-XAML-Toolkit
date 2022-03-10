@@ -337,7 +337,8 @@ namespace RapidXamlToolkit.XamlAnalysis
                         continue;
                     }
 
-                    var fileTimestamp = File.GetCreationTimeUtc(file);
+                    // use write time to consider updated analyzers
+                    var fileTimestamp = File.GetLastWriteTimeUtc(file);
 
                     if (AnalyzerCache.ContainsKey(file))
                     {
